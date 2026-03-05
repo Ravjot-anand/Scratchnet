@@ -54,6 +54,19 @@ class Value:
         out._backward = _backward
         return out
     
+    #relu function
+    def relu(self):
+        #can refer 3.png for the relu function
+        out = Value(0 if self.data < 0 else self.data, (self,), 'ReLU')
+        
+        #the backward function for relu is a bit different, because the gradient is 0 for negative inputs, 
+        #and 1 for positive inputs
+        #the (out.data > 0) will be 0 for negative inputs, and 1 for positive inputs, so we can use that to multiply the gradient
+        def _backward():
+           self.grad += (out.data > 0) * out.grad
+        out._backward = _backward
+        return out
+
     def exp(self):
         x = self.data
         out = Value(math.exp(x), (self,), 'exp')
